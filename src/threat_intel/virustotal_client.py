@@ -107,10 +107,10 @@ class VirusTotalClient:
                 "success": True,
                 "ioc_type": "domains",
                 "ioc_value": domain,
-                "registrar": attributes["registrar"],
-                "creation_date": datetime.fromtimestamp( attributes["creation_date"]).strftime("%Y-%m-%d"),
-                "reputation": attributes["reputation"],
-                "last_analysis_stats": attributes["last_analysis_stats"],
+                "registrar": attributes.get("registrar", "Unknown"),
+                "creation_date": datetime.fromtimestamp( attributes.get("creation_date","Unknown")).strftime("%Y-%m-%d"),
+                "reputation": attributes.get("reputation","Unknown"),
+                "last_analysis_stats": attributes.get("last_analysis_stats","Unknown"),
             }
         else:
             return result

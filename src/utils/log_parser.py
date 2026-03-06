@@ -35,7 +35,7 @@ def parse_log_file(file: str) -> list:
         lines = f.readlines()
         for line in lines:
             parser = parse_syslog_line(line)
-            if parser["ioc_value"] is None:
+            if parser is None:
                 continue
             else:
                 IOC_file.append(parser)

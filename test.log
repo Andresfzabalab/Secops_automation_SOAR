@@ -1,4 +1,4 @@
 Oct 10 13:55:36 webserver01 sshd[4521]: Failed password from 45.33.32.156 port 22
-Oct 10 13:55:40 webserver01 systemd[1]: Started Daily apt upgrade
-Oct 10 13:55:45 webserver01 sshd[4522]: Failed password from 8.8.8.8 port 22
-Oct 10 13:55:50 webserver01 sshd[4523]: Accepted password for admin from 1.1.1.1
+Oct 10 13:55:40 webserver01 nginx[1234]: GET https://evil-site.com/malware 200
+Oct 10 13:55:45 webserver01 dns[5432]: Query for evil-domain.com resolved
+Oct 10 13:55:50 webserver01 av[2341]: Detected hash 44d88612fea8a8f36de82e1278abb02f

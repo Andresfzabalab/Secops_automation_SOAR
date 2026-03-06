@@ -1,13 +1,14 @@
 import re
 
 def get_verdict(enriched_ioc: dict) -> dict:
-    malicious = enriched_ioc["last_analysis_stats"]["malicious"]
+    stats = enriched_ioc.get("last_analysis_stats", {})
+    malicious = stats.get("malicious", 0)
     if malicious <= 2:
-        verdict = "Clean"
+        verdict = "CLEAN"
     elif malicious <= 10:
-        verdict = "Suspect"
+        verdict = "SUSPICIOUS"
     else:
-        verdict = "Malicius"
+        verdict = "MALICIOUS"
     
     enriched_ioc["verdict"] = verdict
     return enriched_ioc

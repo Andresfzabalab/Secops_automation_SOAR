@@ -11,9 +11,9 @@ def read_iocs_from_file(file_path: str) -> list:
     with open(file_path, "r") as file:
         lines = file.readlines()
         for line in lines:
-            clean_line = line.strip()  # remove whitespace/newlines
-            if clean_line:             # skip empty lines
-                iocs.append(clean_line)  # add to list
+            clean_line = line.strip()  
+            if clean_line:
+                iocs.append(clean_line)
     
     return iocs
 
@@ -24,8 +24,10 @@ def detect_ioc_type(value: str) -> str:
         return "IP"
     elif len(value) in [32, 40, 64] and value.isalnum():
         return "hash"
-    else:
+    elif re.match(r"^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", value):
         return "Domain"
+    else:
+        return "unknown"
 
 def process_iocs(file_path: str, client) -> list:
     IOC = []
