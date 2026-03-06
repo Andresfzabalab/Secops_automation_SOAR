@@ -3,9 +3,7 @@ import os
 from src.processors.batch_processor import detect_ioc_type
 
 
-log1 = "Oct 10 13:55:36 webserver01 sshd[4521]: Failed password from 45.33.32.156"
 
-log2 = "Oct 10 13:55:36 webserver01 systemd[1]: Started Daily apt upgrade"
 
 def parse_syslog_line(log: str) -> dict:
     parts = log.split() 
@@ -23,9 +21,6 @@ def parse_syslog_line(log: str) -> dict:
                     "ioc_type": ioc_type,
         }
 
-
-print( parse_syslog_line(log1), sep="\n")
-print( parse_syslog_line(log2), sep="\n")
 
 def parse_log_file(file: str) -> list:
     if not os.path.exists(file):
