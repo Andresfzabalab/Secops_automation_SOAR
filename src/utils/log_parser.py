@@ -30,10 +30,8 @@ def parse_log_file(file: str) -> list:
     IOC_file = []
     with open(file, "r") as f:
         lines = f.readlines()
-        print("Lines read:", lines)
         for line in lines:
             parser = parse_syslog_line(line)
-            print("Parser result:", parser)
             if parser["ip_address"] is None:
                 continue
             else:
