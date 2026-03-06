@@ -1,5 +1,6 @@
 import re
 import os
+from src.processors.batch_processor import detect_ioc_type
 
 
 log1 = "Oct 10 13:55:36 webserver01 sshd[4521]: Failed password from 45.33.32.156"
@@ -11,14 +12,16 @@ def parse_syslog_line(log: str) -> dict:
     timestamp = " ".join(parts[0:3])
     hostname = parts[3]
     service = parts[4].split("[")[0]
-    match =  re.search(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}", log)
-    ip = match.group() if match else None
-    return{
-        "timestamp": timestamp,
-        "hostname": hostname,
-        "service": service,
-        "ip_address": ip,
-    }
+    for word in parts:
+        ioc_type= detect_ioc_type(word)
+        if ioc_type != "unknown":
+            return{
+                    "timestamp": timestamp,
+                    "hostname": hostname,
+                    "service": service,
+                    "ioc_value": word,
+                    "ioc_type": ioc_type,
+        }
 
 
 print( parse_syslog_line(log1), sep="\n")
@@ -32,7 +35,7 @@ def parse_log_file(file: str) -> list:
         lines = f.readlines()
         for line in lines:
             parser = parse_syslog_line(line)
-            if parser["ip_address"] is None:
+            if parser["ioc_value"] is None:
                 continue
             else:
                 IOC_file.append(parser)
@@ -41,4 +44,4 @@ def parse_log_file(file: str) -> list:
 def save_ips_to_file(parsed_logs: list, output_path: str) -> None:
     with open(output_path, "w") as f:
         for ip in parsed_logs:
-            f.write(ip ["ip_address"] + "\n") 
+            f.write(ip ["ioc_value"] + "\n") 
