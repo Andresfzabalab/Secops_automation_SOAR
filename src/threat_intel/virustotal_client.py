@@ -3,6 +3,8 @@ from http.client import responses
 from ipaddress import ip_address
 import requests
 import time
+import base64
+from  datetime import datetime
 
 
 from ..config import api_key
@@ -87,34 +89,61 @@ class VirusTotalClient:
                 "success": True,
                 "ioc_type": "ip",
                 "ioc_value": ip,
-                "country": attributes["country"],
-                "as_owner": attributes["as_owner"],
-                "asn": attributes["asn"],
-                "reputation": attributes["reputation"],
-                "last_analysis_stats": attributes["last_analysis_stats"],
+                "country": attributes.get("country", "Unknown"),
+                "as_owner": attributes.get("as_owner", "Unknown"),
+                "asn": attributes.get("asn","Unknown"),
+                "reputation": attributes.get("reputation","Unknown"),
+                "last_analysis_stats": attributes.get("last_analysis_stats","Unknown"),
             }
         else:
             return result
     
     
     def get_domain_report(self, domain: str) -> dict:
-        result = self._make_request("GET" f"domain_name{domain}")
+        result = self._make_request("GET", f"domains/{domain}")
         if result ["success"] is True:
-            return ["data"]
+            attributes = result["data"]["data"]["attributes"]
+            return {
+                "success": True,
+                "ioc_type": "domains",
+                "ioc_value": domain,
+                "registrar": attributes["registrar"],
+                "creation_date": datetime.fromtimestamp( attributes["creation_date"]).strftime("%Y-%m-%d"),
+                "reputation": attributes["reputation"],
+                "last_analysis_stats": attributes["last_analysis_stats"],
+            }
         else:
             return result
     
     def get_hash_report(self, hash: str) -> dict:
-        result = self._make_request("GET" f"domain_name{hash}")
+        result = self._make_request("GET", f"files/{hash}")
         if result ["success"] is True:
-            return ["data"]
+            attributes = result["data"]["data"]["attributes"]
+            return {
+                "success": True,
+                "ioc_type": "hash",
+                "ioc_value": hash,
+                "meaningful_name": attributes["meaningful_name"],
+                "type_description": attributes["type_description"],
+                "size": attributes["size"],
+                "suggested_threat_label": attributes["popular_threat_classification"]["suggested_threat_label"],
+                "last_analysis_stats": attributes["last_analysis_stats"],
+            }
         else:
             return result
         
     def get_url_report(self, url: str) -> dict:
-        result = self._make_request("GET" f"domain_name{url}")
+        url_id = base64.urlsafe_b64encode(url.encode()).decode().rstrip("=")
+        result = self._make_request("GET", f"urls/{url_id}")
         if result ["success"] is True:
-            return ["data"]
+                attributes = result["data"]["data"]["attributes"]
+                return {
+                    "success": True,
+                    "ioc_type": "urls",
+                    "ioc_value": url,
+                    "reputation": attributes["reputation"],
+                    "last_analysis_stats": attributes["last_analysis_stats"],
+                }
         else:
             return result
 

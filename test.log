@@ -1,0 +1,4 @@
+Oct 10 13:55:36 webserver01 sshd[4521]: Failed password from 45.33.32.156 port 22
+Oct 10 13:55:40 webserver01 systemd[1]: Started Daily apt upgrade
+Oct 10 13:55:45 webserver01 sshd[4522]: Failed password from 8.8.8.8 port 22
+Oct 10 13:55:50 webserver01 sshd[4523]: Accepted password for admin from 1.1.1.1
